@@ -14,7 +14,7 @@ const BalanceCheckForm = () => {
 
   return (
     <form
-      className="flex flex-col items-center max-w-md mx-auto p-4 mt-4 bg-white rounded-lg shadow-md"
+      className="flex flex-col items-center max-w-md mx-auto p-4 mt-2  bg-gray-100 rounded-lg shadow-md"
       onSubmit={handleSubmit}
     >
       <label className="text-lg font-medium mb-2">
