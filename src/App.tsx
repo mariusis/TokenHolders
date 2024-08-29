@@ -11,7 +11,7 @@ function App() {
       <div>
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/TokenHolders" element={<Home />} />
             <Route path="/holders" element={<TokenInfoDisplay />} />
             <Route path="/database" element={<DatabaseInfo />} />
           </Routes>
