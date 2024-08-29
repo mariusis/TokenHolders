@@ -68,7 +68,7 @@ const TokenInfoDisplay = () => {
                     </a>
                   </td>
                   <td className="border border-gray-400 p-2">
-                    Balance: {formatUnits(wallet[1], 18)}
+                    {formatUnits(wallet[1], 18)}
                   </td>
                 </tr>
               ))}
