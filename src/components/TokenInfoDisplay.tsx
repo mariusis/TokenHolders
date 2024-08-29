@@ -48,31 +48,33 @@ const TokenInfoDisplay = () => {
         </div>
         <BalanceCheckForm />
         <h1 className="text-3xl font-bold my-3">Wallets</h1>
-        <table className="w-1/2 mx-auto border-collapse border-4  border-gray-400">
-          <thead>
-            <tr>
-              <th className="border border-gray-400 p-2">Address</th>
-              <th className="border border-gray-400 p-2">Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            {wallets.map((wallet, index) => (
-              <tr key={index}>
-                <td className="border border-gray-400 p-2 hover:text-blue-500">
-                  <a
-                    href={`https://sepolia.etherscan.io/address/${wallet[0]}`}
-                    target="_blank"
-                  >
-                    {wallet[0]}
-                  </a>
-                </td>
-                <td className="border border-gray-400 p-2">
-                  Balance: {formatUnits(wallet[1], 18)}
-                </td>
+        <div className="">
+          <table className="d-flex w-full mx-auto border-collapse border-4 border-gray-400">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border border-gray-400 p-2">Address</th>
+                <th className="border border-gray-400 p-2">Balance</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {wallets.map((wallet, index) => (
+                <tr key={index}>
+                  <td className="border border-gray-400 p-2 hover:text-blue-500 max-w-[150px] sm:max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap">
+                    <a
+                      href={`https://sepolia.etherscan.io/address/${wallet[0]}`}
+                      target="_blank"
+                    >
+                      {wallet[0]}
+                    </a>
+                  </td>
+                  <td className="border border-gray-400 p-2">
+                    Balance: {formatUnits(wallet[1], 18)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
