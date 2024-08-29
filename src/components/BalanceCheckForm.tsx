@@ -7,6 +7,7 @@ const BalanceCheckForm = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Get the address token balance, convert it from BigInt and moving the decimal points then set the state
     checkUserBalance(address).then((balance) => {
       setBalance(Number(formatUnits(balance, 18)));
     });

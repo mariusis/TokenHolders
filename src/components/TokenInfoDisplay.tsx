@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import getAllTransactionsForContract from "../services/TokenHolders";
+import getTokenHolders from "../services/TokenHolders";
 
 import { formatUnits } from "@ethersproject/units";
 import BalanceCheckForm from "./BalanceCheckForm";
@@ -11,7 +11,7 @@ const TokenInfoDisplay = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllTransactionsForContract();
+        const data = await getTokenHolders();
         setTokenHolders(data.length);
         setWallets(data);
       } catch (error) {

@@ -3,16 +3,21 @@ import ABI from "../abis/tokenABI.json";
 import { ethers } from "ethers";
 import { JsonRpcProvider } from "ethers/providers";
 
-const CONTRACT_ADDRESS = "0xb1EA3b0211bee07388937Ae6Bdf2537c62DD6B92";
-const START_BLOCK = 6592486;
-
 const provider = new JsonRpcProvider(
   "https://ethereum-sepolia-rpc.publicnode.com"
 );
 
-export default async function getAllTransactionsForContract() {
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider); //Get an istance of the contract
+export default async function getTokenHolders() {
+  const contract = new ethers.Contract(
+    import.meta.env.VITE_CONTRACT_ADDRESS,
+    ABI,
+    provider
+  ); //Get an istance of the contract
+
+  //Initialize the range of blocks to search
+  const START_BLOCK = 6592486; //Block where the contract was deployed
   const END_BLOCK = await provider.getBlockNumber(); //Get the latest block of the provider
+
   const events = await contract.queryFilter("Transfer", START_BLOCK, END_BLOCK); //Search for all transfer events between the first block the contract appears and the latest
 
   const map: Map<string, BigInt> = new Map<string, BigInt>(); //Map to store the wallets and their balances
