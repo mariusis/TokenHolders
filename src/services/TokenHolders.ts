@@ -9,11 +9,10 @@ const START_BLOCK = 6592486;
 const provider = new JsonRpcProvider(
   "https://ethereum-sepolia-rpc.publicnode.com"
 );
-const END_BLOCK = await provider.getBlockNumber();
 
 export default async function getAllTransactionsForContract() {
   const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-
+  const END_BLOCK = await provider.getBlockNumber();
   const events = await contract.queryFilter("Transfer", START_BLOCK, END_BLOCK);
 
   const map: Map<string, BigInt> = new Map<string, BigInt>();
@@ -42,6 +41,7 @@ export default async function getAllTransactionsForContract() {
 }
 
 export async function getAllHolders() {
+  const END_BLOCK = await provider.getBlockNumber();
   for (let blockNumber = START_BLOCK; blockNumber < END_BLOCK; blockNumber++) {
     const block = await provider.getBlock(blockNumber);
     if (block) {
