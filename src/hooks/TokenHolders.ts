@@ -3,8 +3,8 @@ import ABI from "../abis/tokenABI.json";
 import { ethers } from "ethers";
 import { JsonRpcProvider } from "ethers/providers";
 
-const CONTRACT_ADDRESS = "0xa93C7CC0B114FC84daa4beE966829D88396C6c6a";
-const START_BLOCK = 6588036;
+const CONTRACT_ADDRESS = "0xb1EA3b0211bee07388937Ae6Bdf2537c62DD6B92";
+const START_BLOCK = 6592486;
 
 const provider = new JsonRpcProvider(
   "https://ethereum-sepolia-rpc.publicnode.com"
