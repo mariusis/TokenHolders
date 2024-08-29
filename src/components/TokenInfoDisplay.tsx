@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import getAllTransactionsForContract from "../hooks/TokenHolders";
+import getAllTransactionsForContract from "../services/TokenHolders";
 
 import { formatUnits } from "@ethersproject/units";
+import BalanceCheckForm from "./BalanceCheckForm";
 
 const TokenInfoDisplay = () => {
   const [tokenHolders, setTokenHolders] = useState(0);
@@ -31,6 +32,7 @@ const TokenInfoDisplay = () => {
           <p>Total number of holders:</p>
           <p>{tokenHolders}</p>
         </div>
+        <BalanceCheckForm />
         <h1 className="text-3xl font-bold my-3">Wallets</h1>
         <table className="w-1/2 mx-auto border-collapse border-4  border-gray-400">
           <thead>
