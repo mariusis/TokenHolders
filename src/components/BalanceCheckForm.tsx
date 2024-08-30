@@ -5,12 +5,22 @@ const BalanceCheckForm = () => {
   const [address, setAddress] = useState("");
   const [balance, setBalance] = useState(0);
 
+  /**
+   * Handles the form submission by getting the token balance of the
+   * provided address, converting it from BigInt to a number with 18
+   * decimal places, and setting the component state with the result.
+   * If an error is encountered, it is logged to the console.
+   */
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Get the address token balance, convert it from BigInt and moving the decimal points then set the state
-    checkUserBalance(address).then((balance) => {
-      setBalance(Number(formatUnits(balance, 18)));
-    });
+
+    try {
+      checkUserBalance(address).then((balance) => {
+        setBalance(Number(formatUnits(balance, 18)));
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
