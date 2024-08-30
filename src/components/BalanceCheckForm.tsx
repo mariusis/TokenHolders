@@ -50,11 +50,10 @@ const BalanceCheckForm = () => {
       >
         Check Balance
       </button>
-      {balance > 0 && (
-        <p className="text-lg font-medium mt-4 text-gray-600">
-          Your balance is: {balance} MTK
-        </p>
-      )}
+
+      <p className="text-lg font-medium mt-4 text-gray-600">
+        Wallet balance is: {balance} MTK
+      </p>
     </form>
   );
 };
