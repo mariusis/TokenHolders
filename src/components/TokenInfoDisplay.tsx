@@ -9,12 +9,23 @@ const TokenInfoDisplay = () => {
   const [wallets, setWallets] = useState<[string, any][]>([]); // Conflicting type for BigInt -- Replaced with any
 
   useEffect(() => {
-    const fetchData = async () => {
+    /**
+     * Fetches the token holders from the blockchain and updates the component state
+     * with the result.
+     * @returns {Promise<void>}
+     */
+    const fetchData = async (): Promise<void> => {
       try {
+        // Fetch the list of token holders from the blockchain
         const data = await getTokenHolders();
+
+        // Set the token holders count in the component state
         setTokenHolders(data.length);
+
+        // Set the wallets list in the component state
         setWallets(data);
       } catch (error) {
+        // Log any errors to the console
         console.error(error);
       }
     };

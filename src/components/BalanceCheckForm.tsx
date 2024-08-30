@@ -15,10 +15,14 @@ const BalanceCheckForm = () => {
     event.preventDefault();
 
     try {
+      // Call the checkUserBalance() function to get the token balance of the
+      // provided address, and convert it from BigInt to a number with 18
+      // decimal places.
       checkUserBalance(address).then((balance) => {
         setBalance(Number(formatUnits(balance, 18)));
       });
     } catch (error) {
+      // Log any errors to the console.
       console.log(error);
     }
   };
