@@ -29,22 +29,16 @@ export default async function getTokenHolders(): Promise<[string, bigint][]> {
   // Create a map to store the token holders and their balances
   const wallets: Map<string, bigint> = new Map();
 
-  // Iterate over the events and populate the map
+  // Iterate over the events and update the map
   for (const event of events) {
     if ("args" in event) {
       // Get the sender and recipient of the transfer event
-      const [sender, recipient] = event.args;
+      const [sender, recipient, amount] = event.args;
 
-      // Add the sender and recipient to the map with a balance of 0
-      wallets.set(sender, 0n);
-      wallets.set(recipient, 0n);
+      // Update the balances of the sender and recipient
+      wallets.set(sender, (wallets.get(sender) || 0n) - amount);
+      wallets.set(recipient, (wallets.get(recipient) || 0n) + amount);
     }
-  }
-
-  // Iterate over the map and update the balances with the current balance
-  for (const [address] of wallets) {
-    const balance = await contract.balanceOf(address);
-    wallets.set(address, balance);
   }
 
   // Return the list of token holders and their balances, excluding those with a balance of 0
