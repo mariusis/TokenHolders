@@ -3,7 +3,6 @@ import db from "../lib/dexie.config";
 import getTokenHolders from "../services/TokenHolders";
 
 let startBlock = 6592486; // Global variable
-let isTrue = true;
 
 export default async function fetchData(): Promise<any[]> {
   const provider = new JsonRpcProvider(import.meta.env.VITE_JSON_RPC_PROVIDER);
@@ -32,7 +31,7 @@ export default async function fetchData(): Promise<any[]> {
 
       const data = await getTokenHolders(startBlock, endBlock);
       startBlock = endBlock + 1;
-      if (data && Array.isArray(data) && isTrue) {
+      if (data && Array.isArray(data)) {
         db.table("tokenHolders").bulkAdd(data);
         isTrue = false;
       }
