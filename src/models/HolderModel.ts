@@ -1,6 +1,6 @@
 interface Holder {
   address: string;
-  balance: string;
+  balance: bigint;
 }
 
 export default Holder;

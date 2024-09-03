@@ -3,36 +3,35 @@ import getTokenHolders from "../services/TokenHolders";
 
 import { formatUnits } from "@ethersproject/units";
 import BalanceCheckForm from "./BalanceCheckForm";
+import setTokenHolder from "../services/TestDB";
+import db from "../lib/dexie.config";
+import fetchData from "../hooks/fetchData";
 
 const TokenInfoDisplay = () => {
   const [tokenHolders, setTokenHolders] = useState(0);
   const [wallets, setWallets] = useState<[string, any][]>([]); // Conflicting type for BigInt -- Replaced with any
 
   useEffect(() => {
-    /**
-     * Fetches the token holders from the blockchain and updates the component state
-     * with the result.
-     * @returns {Promise<void>}
-     */
-    const fetchData = async (): Promise<void> => {
+    const fetchDataAndUpdate = async () => {
       try {
-        // Fetch the list of token holders from the blockchain
-        const data = await getTokenHolders();
-
-        // Set the token holders count in the component state
+        // Clear cache and fetch new data
+        const data = await fetchData(true); // Pass true to clear the cache
         setTokenHolders(data.length);
-
-        // Set the wallets list in the component state
         setWallets(data);
       } catch (error) {
-        // Log any errors to the console
-        console.error(error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
-  }, []);
+    // Initial fetch
+    fetchDataAndUpdate();
 
+    // Set up interval to fetch data every 10 seconds
+    const intervalId = setInterval(fetchDataAndUpdate, 10000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
   return (
     <div>
       {/* Sepolia redirect button */}
@@ -54,7 +53,7 @@ const TokenInfoDisplay = () => {
 
       <div className="flex flex-col items-center text-3xl mx-auto p-4 my-4 ">
         <p>There are currently </p>
-        <p>{tokenHolders}</p>
+        {tokenHolders > 0 ? <p> {tokenHolders} </p> : <p>&ensp;</p>}
         <p>wallets owning this token</p>
       </div>
 
