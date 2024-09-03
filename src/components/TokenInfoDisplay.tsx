@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import getTokenHolders from "../services/TokenHolders";
 
 import { formatUnits } from "@ethersproject/units";
 import BalanceCheckForm from "./BalanceCheckForm";
-import setTokenHolder from "../services/TestDB";
-import db from "../lib/dexie.config";
+
 import fetchData from "../hooks/fetchData";
 
 const TokenInfoDisplay = () => {
