@@ -33,7 +33,6 @@ export default async function fetchData(): Promise<any[]> {
       startBlock = endBlock + 1;
       if (data && Array.isArray(data)) {
         db.table("tokenHolders").bulkAdd(data);
-        isTrue = false;
       }
 
       console.log("Data fetched from second code block");
