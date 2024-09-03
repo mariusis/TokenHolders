@@ -11,7 +11,10 @@ import { JsonRpcProvider } from "ethers/providers";
  *
  * @returns {Promise<[string, bigint][]}}
  */
-export default async function getTokenHolders(): Promise<[string, bigint][]> {
+export default async function getTokenHolders(
+  startBlock: number,
+  endBlock: number
+): Promise<[string, bigint][]> {
   // Create a provider and a contract instance
   const provider = new JsonRpcProvider(import.meta.env.VITE_JSON_RPC_PROVIDER);
   const contract = new ethers.Contract(
@@ -20,9 +23,8 @@ export default async function getTokenHolders(): Promise<[string, bigint][]> {
     provider
   );
 
+  console.log("Get Token Holders called on " + startBlock + " and " + endBlock);
   // Query the Transfer event from the contract
-  const startBlock = 6592486;
-  const endBlock = await provider.getBlockNumber();
 
   const events = await contract.queryFilter("Transfer", startBlock, endBlock);
 

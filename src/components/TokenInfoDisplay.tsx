@@ -13,7 +13,7 @@ const TokenInfoDisplay = () => {
     const fetchDataAndUpdate = async () => {
       try {
         // Clear cache and fetch new data
-        const data = await fetchData(true); // Pass true to clear the cache
+        const data = await fetchData(); // Pass true to clear the cache
         setTokenHolders(data.length);
         setWallets(data);
       } catch (error) {
