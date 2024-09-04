@@ -11,17 +11,20 @@ type TransferEventParams = {
   event: any; // Using `any` for the event, or you can define a more specific type if needed
 };
 
-// Create a debounced function for handling the database update
 const handleTransferEvent = debounce(
   async (params: TransferEventParams, contract: ethers.Contract) => {
     const { to } = params;
     const { from } = params;
+    const { value } = params;
 
     try {
       // Fetch the balance for the recipient address
       const balanceTo = await contract.balanceOf(to);
-      if (!(await db.table("tokenHolders").where("address").equals(to))) {
-        db.table("tokenHolders").add({
+      if (
+        (await db.table("tokenHolders").where("address").equals(to).count()) ===
+        0
+      ) {
+        await db.table("tokenHolders").add({
           address: to,
           balance: formatUnits(balanceTo, 18),
         });
@@ -34,17 +37,27 @@ const handleTransferEvent = debounce(
       }
 
       const balanceFrom = await contract.balanceOf(from);
-      if (!(await db.table("tokenHolders").where("address").equals(from))) {
-        db.table("tokenHolders").add({
+      if (
+        (await db
+          .table("tokenHolders")
+          .where("address")
+          .equals(from)
+          .count()) === 0
+      ) {
+        await db.table("tokenHolders").add({
           address: from,
           balance: formatUnits(balanceFrom, 18),
         });
       } else {
-        await db
-          .table("tokenHolders")
-          .where("address")
-          .equals(from)
-          .modify({ balance: formatUnits(balanceFrom, 18) });
+        if ((await balanceFrom) == 0) {
+          await db.table("tokenHolders").where("address").equals(from).delete();
+        } else {
+          await db
+            .table("tokenHolders")
+            .where("address")
+            .equals(from)
+            .modify({ balance: formatUnits(balanceFrom, 18) });
+        }
       }
     } catch (error) {
       console.error("Error updating token holder data:", error);

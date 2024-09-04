@@ -46,6 +46,7 @@ const TokenInfoDisplay = () => {
 
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
+      console.log("Updating data...");
       try {
         // Clear cache and fetch new data
         const data: Wallet[] = await db.table("tokenHolders").toArray();
@@ -59,7 +60,7 @@ const TokenInfoDisplay = () => {
 
     fetchDataAndUpdate();
 
-    const intervalId = setInterval(fetchDataAndUpdate, 100);
+    const intervalId = setInterval(fetchDataAndUpdate, 1000);
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
