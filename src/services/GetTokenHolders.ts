@@ -1,20 +1,12 @@
 import ABI from "../abis/tokenABI.json";
 
-import { ethers } from "ethers";
+import { ethers, formatUnits } from "ethers";
 import { JsonRpcProvider } from "ethers/providers";
 
-/**
- * Fetches the list of token holders from the blockchain and returns
- * an array of tuples, where the first element of each tuple is the
- * address of the token holder and the second element is the balance
- * of the token holder.
- *
- * @returns {Promise<[string, bigint][]}}
- */
-export default async function getTokenHolders(
-  startBlock: number,
-  endBlock: number
-): Promise<[string, bigint][]> {
+import ConvertHoldersToWallet from "../utils/ConvertHoldersToWallet";
+import Wallet from "../models/Wallet";
+
+export default async function getTokenHolders() {
   // Create a provider and a contract instance
   const provider = new JsonRpcProvider(import.meta.env.VITE_JSON_RPC_PROVIDER);
   const contract = new ethers.Contract(
@@ -22,6 +14,8 @@ export default async function getTokenHolders(
     ABI,
     provider
   );
+  const startBlock = 6592486;
+  const endBlock = await provider.getBlockNumber();
 
   console.log("Get Token Holders called on " + startBlock + " and " + endBlock);
   // Query the Transfer event from the contract
@@ -29,20 +23,31 @@ export default async function getTokenHolders(
   const events = await contract.queryFilter("Transfer", startBlock, endBlock);
 
   // Create a map to store the token holders and their balances
-  const wallets: Map<string, bigint> = new Map();
+  let holders: Set<string> = new Set();
 
   // Iterate over the events and update the map
   for (const event of events) {
     if ("args" in event) {
       // Get the sender and recipient of the transfer event
-      const [sender, recipient, amount] = event.args;
+      const [sender, recipient] = event.args;
 
       // Update the balances of the sender and recipient
-      wallets.set(sender, (wallets.get(sender) || 0n) - amount);
-      wallets.set(recipient, (wallets.get(recipient) || 0n) + amount);
+      holders.add(sender);
+      holders.add(recipient);
     }
   }
 
-  // Return the list of token holders and their balances, excluding those with a balance of 0
-  return Array.from(wallets).filter(([_, balance]) => balance > 0n);
+  let wallets: Wallet[] = [];
+  for (const holder of holders) {
+    const balance = await contract.balanceOf(holder);
+    const wallet: Wallet = {
+      address: holder,
+      balance: Number(formatUnits(balance, 18)),
+    };
+
+    if (wallet.balance > 0) {
+      wallets.push(wallet);
+    }
+  }
+  return wallets;
 }
