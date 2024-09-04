@@ -5,15 +5,13 @@ import Home from "./components/Home";
 
 function App() {
   return (
-    <>
-      <div>
-        <Router>
-          <Routes>
-            <Route path="/TokenHolders" element={<Home />} />
-          </Routes>
-        </Router>
-      </div>
-    </>
+    <div className="text-center">
+      <Router>
+        <Routes>
+          <Route path="/TokenHolders" element={<Home />} />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 
