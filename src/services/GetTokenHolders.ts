@@ -2,8 +2,6 @@ import ABI from "../abis/tokenABI.json";
 
 import { ethers, formatUnits } from "ethers";
 import { JsonRpcProvider } from "ethers/providers";
-
-import ConvertHoldersToWallet from "../utils/ConvertHoldersToWallet";
 import Wallet from "../models/Wallet";
 
 export default async function getTokenHolders() {

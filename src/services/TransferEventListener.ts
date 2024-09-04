@@ -15,7 +15,6 @@ const handleTransferEvent = debounce(
   async (params: TransferEventParams, contract: ethers.Contract) => {
     const { to } = params;
     const { from } = params;
-    const { value } = params;
 
     try {
       // Fetch the balance for the recipient address
