@@ -1,12 +1,14 @@
 import ABI from "../abis/tokenABI.json";
 
 import { ethers, formatUnits } from "ethers";
-import { JsonRpcProvider } from "ethers/providers";
+import { JsonRpcProvider, WebSocketProvider } from "ethers/providers";
 import Wallet from "../models/Wallet";
 
 export default async function getTokenHolders() {
   // Create a provider and a contract instance
-  const provider = new JsonRpcProvider(import.meta.env.VITE_JSON_RPC_PROVIDER);
+  const provider = new WebSocketProvider(
+    import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
+  );
   const contract = new ethers.Contract(
     import.meta.env.VITE_CONTRACT_ADDRESS,
     ABI,

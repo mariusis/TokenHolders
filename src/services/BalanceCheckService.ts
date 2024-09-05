@@ -1,9 +1,11 @@
 import ABI from "../abis/tokenABI.json";
 
 import { ethers } from "ethers";
-import { JsonRpcProvider } from "ethers/providers";
+import { JsonRpcProvider, WebSocketProvider } from "ethers/providers";
 
-const provider = new JsonRpcProvider(import.meta.env.VITE_JSON_RPC_PROVIDER);
+const provider = new WebSocketProvider(
+  import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
+);
 
 /**
  * Calls the balanceOf() method of the contract to get the balance of the address.

@@ -18,37 +18,18 @@ const TokenInfoDisplay = () => {
   library.add(faCopy);
 
   useEffect(() => {
-    // Initialize the transfer event listener when the component mounts
-    TransferEventListener();
+    fetchData();
   }, []);
 
   useEffect(() => {
-    const InitializeData = async () => {
-      try {
-        // Clear cache and fetch new data
-        const data: Wallet[] = await fetchData();
-
-        setTokenHolders(data.length);
-        setWallets(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    // Initial fetch
-    InitializeData();
-
-    const intervalId = setInterval(InitializeData, 10000);
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
+    // Initialize the transfer event listener when the component mounts
+    TransferEventListener();
   }, []);
 
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
       console.log("Updating data...");
       try {
-        // Clear cache and fetch new data
         const data: Wallet[] = await db.table("tokenHolders").toArray();
 
         setTokenHolders(data.length);
