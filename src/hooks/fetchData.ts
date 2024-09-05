@@ -1,30 +1,27 @@
 import db from "../lib/dexie.config";
-import getTokenHolders from "../services/TokenHolders";
+import getTokenHolders from "../services/GetTokenHolders";
 
-export default async function fetchData(
-  clearCache: boolean = false
-): Promise<any[]> {
+let count = 0;
+
+export default async function fetchData(): Promise<void> {
   try {
-    if (clearCache) {
-      // Clear all records in the table
-      await db.table("tokenHolders").clear();
-    }
-
-    // Fetch the current records
     let result = await db.table("tokenHolders").toArray();
-
+    // Fetch the current records
+    console.log("fetchData called on " + count++);
     // If the result is empty, fetch new data and add it
-    if (result.length === 0) {
+    if (result.length == 0) {
+      console.log("Data Initialized because result is :", result);
+
       const data = await getTokenHolders();
-      if (data && Array.isArray(data)) {
-        await db.table("tokenHolders").bulkAdd(data);
-        result = data; // Update the result with the newly added data
+
+      for (const holder of data) {
+        db.table("tokenHolders").add({
+          address: holder.address,
+          balance: holder.balance,
+        });
       }
     }
-
-    return result || []; // Ensure it returns an array, even if empty
   } catch (error) {
     console.error("Error in fetchData:", error);
-    return []; // Return an empty array on error
   }
 }
