@@ -1,3 +1,5 @@
+import { Button, Label, TextInput, Card } from "flowbite-react";
+
 import React, { useState } from "react";
 import checkUserBalance from "../services/BalanceCheckService";
 import { formatUnits } from "@ethersproject/units";
@@ -28,33 +30,33 @@ const BalanceCheckForm = () => {
   };
 
   return (
-    <form
-      className="flex flex-col items-center max-w-md mx-auto p-4 mt-2  bg-gray-100 rounded-lg shadow-md"
-      onSubmit={handleSubmit}
-    >
-      <label className="text-lg font-medium mb-2">
-        Enter your wallet address:
-      </label>
-      <input
-        className="w-full p-2 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        type="text"
-        value={address}
-        onChange={(event) => {
-          setAddress(event.target.value);
-          setBalance(0);
-        }}
-      />
-      <button
-        className="w-full p-2 mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-        type="submit"
-      >
-        Check Balance
-      </button>
-
-      <p className="text-lg font-medium mt-4 text-gray-600">
-        Wallet balance is: {balance} MTK
-      </p>
-    </form>
+    <div className="flex h-[calc(100vh-15rem)] items-center">
+      <Card className="w-full max-w-md mx-auto p-4 mt-2 shadow-md flex align-center  sm:max-w-lg">
+        <form className="flex flex-col items-center" onSubmit={handleSubmit}>
+          <Label className="text-lg font-medium mb-2" htmlFor="wallet-address">
+            Enter your wallet address:
+          </Label>
+          <TextInput
+            id="wallet-address"
+            className="w-full"
+            type="text"
+            value={address}
+            onChange={(event) => {
+              setAddress(event.target.value);
+              setBalance(0);
+            }}
+            placeholder="Enter wallet address"
+            required
+          />
+          <Button className="w-full mt-4" type="submit">
+            Check Balance
+          </Button>
+          <p className="text-lg font-medium mt-4 text-gray-600">
+            Wallet balance is: {balance} MTK
+          </p>
+        </form>
+      </Card>
+    </div>
   );
 };
 

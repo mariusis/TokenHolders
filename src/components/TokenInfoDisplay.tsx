@@ -1,30 +1,32 @@
 import { useEffect, useState } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy } from "@fortawesome/free-regular-svg-icons";
-import { library } from "@fortawesome/fontawesome-svg-core";
-
-import BalanceCheckForm from "./BalanceCheckForm";
-
 import fetchData from "../hooks/fetchData";
 import Wallet from "../models/Wallet";
-import TransferEventListener from "../services/TransferEventListener";
+import TransferEventListener, {
+  stopTransferEventListener,
+} from "../services/TransferEventListener";
 import db from "../lib/dexie.config";
+import { Button } from "flowbite-react";
 
 const TokenInfoDisplay = () => {
   const [tokenHolders, setTokenHolders] = useState(0);
-  const [wallets, setWallets] = useState([] as Wallet[]);
-
-  library.add(faCopy);
 
   useEffect(() => {
     // Initialize the data
     fetchData();
+
+    const intervalId = setInterval(fetchData, 10000); // Set the interval to update the data every 1 second
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
     // Initialize the transfer event listener when the component mounts
     TransferEventListener();
+    return () => {
+      stopTransferEventListener();
+    };
   }, []);
 
   useEffect(() => {
@@ -34,7 +36,6 @@ const TokenInfoDisplay = () => {
         const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
 
         setTokenHolders(data.length);
-        setWallets(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -51,62 +52,29 @@ const TokenInfoDisplay = () => {
   return (
     <div>
       {/* Sepolia redirect button */}
-
-      <div>
+      <div className="flex justify-center">
         <a
           href={`https://sepolia.etherscan.io/address/0xb1EA3b0211bee07388937Ae6Bdf2537c62DD6B92`}
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <button
-            className="w-fit p-2 mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold  rounded-lg"
-            type="submit"
-          >
+          <Button color="blue" className="mt-4">
             Etherscan Link
-          </button>
+          </Button>
         </a>
       </div>
-
-      {/* Token holders number message */}
-
-      <div className="flex flex-col items-center text-3xl text-white mx-auto p-4 ">
-        <p>There are currently </p>
-        {tokenHolders > 0 ? <p> {tokenHolders} </p> : <p>&ensp;</p>}
-        <p>wallets owning this token</p>
-      </div>
-
-      <BalanceCheckForm />
-
-      {/* Wallets table */}
-
-      <h1 className="text-3xl text-white font-bold my-3">Wallets</h1>
-      <div className="bg-white w-fit mx-auto rounded-[2rem] shadow-md">
-        <div className="grid grid-cols-[2fr_1fr] gap-4 p-4">
-          <div className="text-gray-500 font-bold">Address</div>
-          <div className="text-gray-500 font-bold">Balance</div>
+      <div className="flex h-[calc(100vh-15rem)] items-center">
+        {/* Token holders number message */}
+        <div className="w-fit flex flex-col items-center text-center mx-auto p-20 my-4 bg-gray-100 rounded-[50%] shadow-md">
+          <h2 className="text-4xl font-bold text-gray-900 mb-2">
+            Token Holders
+          </h2>
+          <p className="text-2xl text-gray-600">There are currently</p>
+          <p className="text-5xl font-bold text-gray-900">
+            {tokenHolders > 0 ? tokenHolders : <span>&nbsp;</span>}
+          </p>
+          <p className="text-2xl text-gray-600">wallets owning this token</p>
         </div>
-        {wallets.map((wallet, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-[2fr_1fr] gap-4 p-4 hover:bg-gray-100"
-          >
-            <div className="flex items-center justify-evenly gap-2">
-              <a
-                href={`https://sepolia.etherscan.io/address/${wallet.address}`}
-                target="_blank"
-                className="text-blue-500 hover:text-blue-700 overflow-hidden text-overflow-ellipsis whitespace-nowrap max-w-[150px] sm:max-w-none"
-              >
-                {wallet.address}
-              </a>
-              <button
-                className="ml-2 text-gray-500 hover:text-gray-700"
-                onClick={() => navigator.clipboard.writeText(wallet.address)}
-              >
-                <FontAwesomeIcon icon={["far", "copy"]} />
-              </button>
-            </div>
-
-            <div>{wallet.balance}</div>
-          </div>
-        ))}
       </div>
     </div>
   );

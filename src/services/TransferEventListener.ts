@@ -3,6 +3,8 @@ import ABI from "../abis/tokenABI.json";
 import db from "../lib/dexie.config";
 import { WebSocketProvider } from "ethers";
 
+let contract: ethers.Contract;
+
 /**
  * Start listening to the Transfer event on the contract and update the
  * token balances in the database when a transfer occurs.
@@ -12,7 +14,7 @@ export default async function startTransferEventListener() {
   const provider = new WebSocketProvider(
     import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
   );
-  const contract = new ethers.Contract(
+  contract = new ethers.Contract(
     import.meta.env.VITE_CONTRACT_ADDRESS,
     ABI,
     provider
@@ -56,5 +58,12 @@ async function updateTokenHolder(address: string, balance: string) {
   if (Number(balance) <= 0) {
     // Delete the record from the database
     await db.table("tokenHolders").where("address").equals(address).delete();
+  }
+}
+
+export function stopTransferEventListener() {
+  // Ensure contract exists and remove the event listener
+  if (contract) {
+    contract.off("Transfer"); // Removes all listeners for "Transfer"
   }
 }
