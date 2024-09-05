@@ -13,21 +13,23 @@ export default async function startTransferEventListener() {
     provider
   );
 
-  contract.on("Transfer", async (sender, recipient) => {
-    const senderBalance = await contract.balanceOf(sender);
-    const recipientBalance = await contract.balanceOf(recipient);
+  contract.on("Transfer", async (from, to) => {
+    const fromBalance = await contract.balanceOf(from);
+    const toBalance = await contract.balanceOf(to);
 
-    // Update sender and recipient balances
-    await updateTokenHolder(sender, formatUnits(senderBalance, 18));
-    await updateTokenHolder(recipient, formatUnits(recipientBalance, 18));
+    // Update from and to balances
+    await updateTokenHolder(from, formatUnits(fromBalance, 18));
+    await updateTokenHolder(to, formatUnits(toBalance, 18));
   });
 }
 
 async function updateTokenHolder(address: string, balance: string) {
-  const existingHolder = await db.table("tokenHolders").get(address);
+  const existingHolder = await db
+    .table("tokenHolders")
+    .get({ address: address });
 
   if (existingHolder) {
-    await db.table("tokenHolders").update(address, { balance });
+    await db.table("tokenHolders").update(address, { balance: balance });
   } else {
     await db.table("tokenHolders").add({ address, balance });
   }
