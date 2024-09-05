@@ -18,6 +18,7 @@ const TokenInfoDisplay = () => {
   library.add(faCopy);
 
   useEffect(() => {
+    // Initialize the data
     fetchData();
   }, []);
 
@@ -30,7 +31,7 @@ const TokenInfoDisplay = () => {
     const fetchDataAndUpdate = async () => {
       console.log("Updating data...");
       try {
-        const data: Wallet[] = await db.table("tokenHolders").toArray();
+        const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
 
         setTokenHolders(data.length);
         setWallets(data);
@@ -41,7 +42,7 @@ const TokenInfoDisplay = () => {
 
     fetchDataAndUpdate();
 
-    const intervalId = setInterval(fetchDataAndUpdate, 1000);
+    const intervalId = setInterval(fetchDataAndUpdate, 1000); // Set the interval to update the data every 1 second
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
