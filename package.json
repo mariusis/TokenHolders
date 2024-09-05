@@ -20,6 +20,8 @@
     "bignumber": "^1.1.0",
     "dexie": "^4.0.8",
     "ethers": "^6.13.2",
+    "flowbite": "^2.5.1",
+    "flowbite-react": "^0.10.1",
     "idb": "^8.0.0",
     "jsdoc": "^4.0.3",
     "jsstore": "^3.13.6",
