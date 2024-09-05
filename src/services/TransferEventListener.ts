@@ -1,4 +1,4 @@
-import { ethers, formatUnits, JsonRpcProvider } from "ethers";
+import { ethers, formatUnits } from "ethers";
 import ABI from "../abis/tokenABI.json";
 import db from "../lib/dexie.config";
 import { WebSocketProvider } from "ethers";

@@ -1,7 +1,7 @@
 import ABI from "../abis/tokenABI.json";
 
 import { ethers } from "ethers";
-import { JsonRpcProvider, WebSocketProvider } from "ethers/providers";
+import { WebSocketProvider } from "ethers/providers";
 
 const provider = new WebSocketProvider(
   import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
