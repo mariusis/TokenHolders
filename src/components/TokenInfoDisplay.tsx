@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import logo from "../assets/logo.jpg";
+
 import fetchData from "../hooks/fetchData";
 import Wallet from "../models/Wallet";
 import TransferEventListener, {
@@ -50,7 +52,7 @@ const TokenInfoDisplay = () => {
   }, []);
 
   return (
-    <div>
+    <div className="w-full h-auto flex flex-col items-center">
       {/* Sepolia redirect button */}
       <div className="flex justify-center">
         <a
@@ -63,17 +65,27 @@ const TokenInfoDisplay = () => {
           </Button>
         </a>
       </div>
-      <div className="flex h-[calc(100vh-15rem)] items-center">
-        {/* Token holders number message */}
-        <div className="w-fit flex flex-col items-center text-center mx-auto p-20 my-4 bg-gray-100 rounded-[50%] shadow-md">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">
-            Token Holders
-          </h2>
-          <p className="text-2xl text-gray-600">There are currently</p>
-          <p className="text-5xl font-bold text-gray-900">
+
+      {/* Token holders number message */}
+      <div className="relative">
+        <div
+          className="aspect-square min-w-[500px] text-center flex flex-col justify-evenly items-center rounded-3xl p-10 mt-4 bg-image "
+          style={{
+            backgroundImage: `url(${logo})`,
+            backgroundSize: "cover",
+            opacity: 0.6,
+          }}
+        ></div>
+        <div className="h-fit w-full absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center">
+          <p className=" text-2xl  font-bold text-blue-950">
+            There are currently
+          </p>
+          <p className=" text-4xl font-bold text-blue-950">
             {tokenHolders > 0 ? tokenHolders : <span>&nbsp;</span>}
           </p>
-          <p className="text-2xl text-gray-600">wallets owning this token</p>
+          <p className=" text-2xl font-bold text-blue-950">
+            wallets owning this token
+          </p>
         </div>
       </div>
     </div>

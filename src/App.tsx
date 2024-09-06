@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import BalanceCheckForm from "./components/BalanceCheckForm";
 import HolderWalletsDisplay from "./components/HolderWalletsDisplay";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             element={<HolderWalletsDisplay />}
           />
         </Routes>
+        <Footer />
       </Router>
     </div>
   );

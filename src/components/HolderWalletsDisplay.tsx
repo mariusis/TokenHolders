@@ -94,7 +94,9 @@ const HolderWalletsDisplay = () => {
                     </Tooltip>
                   </div>
                 </Table.Cell>
-                <Table.Cell>{wallet.balance}</Table.Cell>
+                <Table.Cell className="text-center">
+                  {wallet.balance}
+                </Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>

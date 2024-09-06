@@ -31,10 +31,10 @@ const BalanceCheckForm = () => {
 
   return (
     <div className="flex h-[calc(100vh-15rem)] items-center">
-      <Card className="w-full max-w-md mx-auto p-4 mt-2 shadow-md flex align-center  sm:max-w-lg">
+      <Card className="w-[90%] max-w-md mx-auto p-8 mt-2 shadow-md flex align-center  sm:max-w-lg">
         <form className="flex flex-col items-center" onSubmit={handleSubmit}>
           <Label className="text-lg font-medium mb-2" htmlFor="wallet-address">
-            Enter your wallet address:
+            Check a wallet's address here
           </Label>
           <TextInput
             id="wallet-address"
