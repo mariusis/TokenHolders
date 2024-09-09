@@ -13,58 +13,65 @@ import Wallet from "../models/Wallet";
  * and balance of each token holder.
  */
 export default async function getTokenHolders(): Promise<Wallet[]> {
-  // Create a provider and a contract instance
-  const provider = new WebSocketProvider(
-    import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-  );
-  const contract = new ethers.Contract(
-    import.meta.env.VITE_CONTRACT_ADDRESS,
-    ABI,
-    provider
-  );
+  try {
+    // Create a provider and a contract instance
 
-  // Define the start block number from which to query the Transfer events
-  const startBlock = 6592486;
+    const provider = new WebSocketProvider(
+      import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
+    );
+    const contract = new ethers.Contract(
+      import.meta.env.VITE_CONTRACT_ADDRESS,
+      ABI,
+      provider
+    );
 
-  // Get the current block number
-  const endBlock = await provider.getBlockNumber();
+    // Define the start block number from which to query the Transfer events
+    const startBlock = 6592486;
 
-  console.log("Get Token Holders called on " + startBlock + " and " + endBlock);
+    // Get the current block number
+    const endBlock = await provider.getBlockNumber();
 
-  // Query the Transfer event from the contract
-  const events = await contract.queryFilter("Transfer", startBlock, endBlock);
+    console.log(
+      "Get Token Holders called on " + startBlock + " and " + endBlock
+    );
 
-  // Create a map to store the token holders and their balances
-  const holders: Set<string> = new Set();
+    // Query the Transfer event from the contract
+    const events = await contract.queryFilter("Transfer", startBlock, endBlock);
 
-  // Iterate over the events and update the map
-  for (const event of events) {
-    if ("args" in event) {
-      // Get the sender and recipient of the transfer event
-      const [sender, recipient] = event.args;
+    // Create a map to store the token holders and their balances
+    const holders: Set<string> = new Set();
 
-      // Update the balances of the sender and recipient
-      holders.add(sender);
-      holders.add(recipient);
+    // Iterate over the events and update the map
+    for (const event of events) {
+      if ("args" in event) {
+        // Get the sender and recipient of the transfer event
+        const [sender, recipient] = event.args;
+
+        // Update the balances of the sender and recipient
+        holders.add(sender);
+        holders.add(recipient);
+      }
     }
-  }
 
-  // Create an array to store the Wallet objects
-  const wallets: Wallet[] = [];
+    // Create an array to store the Wallet objects
+    const wallets: Wallet[] = [];
 
-  // Iterate over the holders and create a Wallet object for each one
-  for (const holder of holders) {
-    const balance = await contract.balanceOf(holder);
-    const wallet: Wallet = {
-      address: holder,
-      balance: Number(formatUnits(balance, 18)),
-    };
+    // Iterate over the holders and create a Wallet object for each one
+    for (const holder of holders) {
+      const balance = await contract.balanceOf(holder);
+      const wallet: Wallet = {
+        address: holder,
+        balance: Number(formatUnits(balance, 18)),
+      };
 
-    // Only add the wallet to the array if it has a balance greater than 0
-    if (wallet.balance > 0) {
-      wallets.push(wallet);
+      // Only add the wallet to the array if it has a balance greater than 0
+      if (wallet.balance > 0) {
+        wallets.push(wallet);
+      }
     }
+    return wallets;
+  } catch (error) {
+    return [] as Wallet[];
+    console.error(error);
   }
-
-  return wallets;
 }

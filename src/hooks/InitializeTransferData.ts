@@ -20,6 +20,6 @@ export default async function fetchData(): Promise<void> {
       }
     }
   } catch (error) {
-    console.error("Error in fetchData:", error);
+    console.error("Error in InitializeTransferData:", error);
   }
 }

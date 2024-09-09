@@ -11,25 +11,29 @@ let contract: ethers.Contract;
  */
 export default async function startTransferEventListener() {
   // Create a WebSocket provider and a contract instance
-  const provider = new WebSocketProvider(
-    import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-  );
-  contract = new ethers.Contract(
-    import.meta.env.VITE_CONTRACT_ADDRESS,
-    ABI,
-    provider
-  );
+  try {
+    const provider = new WebSocketProvider(
+      import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
+    );
+    contract = new ethers.Contract(
+      import.meta.env.VITE_CONTRACT_ADDRESS,
+      ABI,
+      provider
+    );
 
-  // Set up an event listener for the Transfer event
-  contract.on("Transfer", async (from, to) => {
-    // Get the current balances of the sender and recipient
-    const fromBalance = await contract.balanceOf(from);
-    const toBalance = await contract.balanceOf(to);
+    // Set up an event listener for the Transfer event
+    contract.on("Transfer", async (from, to) => {
+      // Get the current balances of the sender and recipient
+      const fromBalance = await contract.balanceOf(from);
+      const toBalance = await contract.balanceOf(to);
 
-    // Update the balances in the database
-    await updateTokenHolder(from, formatUnits(fromBalance, 18));
-    await updateTokenHolder(to, formatUnits(toBalance, 18));
-  });
+      // Update the balances in the database
+      await updateTokenHolder(from, formatUnits(fromBalance, 18));
+      await updateTokenHolder(to, formatUnits(toBalance, 18));
+    });
+  } catch (error) {
+    console.error("Caught error in startTransferEventListener:", error);
+  }
 }
 
 /**
@@ -42,22 +46,26 @@ export default async function startTransferEventListener() {
  */
 async function updateTokenHolder(address: string, balance: string) {
   // Get the current record from the database
-  const existingHolder = await db
-    .table("tokenHolders")
-    .get({ address: address });
+  try {
+    const existingHolder = await db
+      .table("tokenHolders")
+      .get({ address: address });
 
-  if (existingHolder) {
-    // Update the record in the database
-    await db.table("tokenHolders").update(address, { balance: balance });
-  } else {
-    // Create a new record in the database
-    await db.table("tokenHolders").add({ address, balance });
-  }
+    if (existingHolder) {
+      // Update the record in the database
+      await db.table("tokenHolders").update(address, { balance: balance });
+    } else {
+      // Create a new record in the database
+      await db.table("tokenHolders").add({ address, balance });
+    }
 
-  // Remove the token holder if they have a balance of 0
-  if (Number(balance) <= 0) {
-    // Delete the record from the database
-    await db.table("tokenHolders").where("address").equals(address).delete();
+    // Remove the token holder if they have a balance of 0
+    if (Number(balance) <= 0) {
+      // Delete the record from the database
+      await db.table("tokenHolders").where("address").equals(address).delete();
+    }
+  } catch (error) {
+    console.error("Caught error in updateTokenHolder:", error);
   }
 }
 
