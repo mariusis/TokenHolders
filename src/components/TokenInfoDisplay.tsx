@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import logo from "../assets/logo.jpg";
 
-import fetchData from "../hooks/fetchData";
+import fetchData from "../hooks/InitializeTransferData";
 import Wallet from "../models/Wallet";
 import TransferEventListener, {
   stopTransferEventListener,

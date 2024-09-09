@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Wallet from "../models/Wallet";
 
-import fetchData from "../hooks/fetchData";
+import fetchData from "../hooks/InitializeTransferData";
 import db from "../lib/dexie.config";
 import TransferEventListener, {
   stopTransferEventListener,
