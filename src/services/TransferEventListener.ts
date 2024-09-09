@@ -32,7 +32,7 @@ export default async function startTransferEventListener() {
       await updateTokenHolder(to, formatUnits(toBalance, 18));
     });
   } catch (error) {
-    console.error("Caught error in startTransferEventListener:", error);
+    throw error;
   }
 }
 
@@ -65,7 +65,7 @@ async function updateTokenHolder(address: string, balance: string) {
       await db.table("tokenHolders").where("address").equals(address).delete();
     }
   } catch (error) {
-    console.error("Caught error in updateTokenHolder:", error);
+    throw error;
   }
 }
 

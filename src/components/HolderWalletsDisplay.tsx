@@ -37,7 +37,6 @@ const HolderWalletsDisplay = () => {
 
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
-      console.log("Updating data...");
       try {
         const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
 

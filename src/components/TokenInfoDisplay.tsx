@@ -9,13 +9,17 @@ import TransferEventListener, {
 } from "../services/TransferEventListener";
 import db from "../lib/dexie.config";
 import { Button } from "flowbite-react";
+import { useErrorBoundary } from "react-error-boundary";
 
 const TokenInfoDisplay = () => {
   const [tokenHolders, setTokenHolders] = useState(0);
+  const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
     // Initialize the data
-    fetchData();
+    fetchData().catch((error) => {
+      showBoundary(error);
+    });
 
     const intervalId = setInterval(fetchData, 10000); // Set the interval to update the data every 10 second
 
@@ -25,7 +29,9 @@ const TokenInfoDisplay = () => {
 
   useEffect(() => {
     // Initialize the transfer event listener when the component mounts
-    TransferEventListener();
+    TransferEventListener().catch((error) => {
+      showBoundary(error);
+    });
     return () => {
       stopTransferEventListener();
     };

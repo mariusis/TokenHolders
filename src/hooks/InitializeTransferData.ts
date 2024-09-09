@@ -11,7 +11,9 @@ export default async function fetchData(): Promise<void> {
       console.log("Data Initialized because result is :", result);
 
       const data = await getTokenHolders();
-
+      if (data.length == 0) {
+        throw new Error("No data found");
+      }
       for (const holder of data) {
         db.table("tokenHolders").add({
           address: holder.address,
@@ -20,6 +22,6 @@ export default async function fetchData(): Promise<void> {
       }
     }
   } catch (error) {
-    console.error("Error in InitializeTransferData:", error);
+    throw error;
   }
 }
