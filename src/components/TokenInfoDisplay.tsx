@@ -17,7 +17,7 @@ const TokenInfoDisplay = () => {
     // Initialize the data
     fetchData();
 
-    const intervalId = setInterval(fetchData, 10000); // Set the interval to update the data every 1 second
+    const intervalId = setInterval(fetchData, 10000); // Set the interval to update the data every 10 second
 
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
@@ -33,7 +33,6 @@ const TokenInfoDisplay = () => {
 
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
-      console.log("Updating data...");
       try {
         const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
 
@@ -52,7 +51,7 @@ const TokenInfoDisplay = () => {
   }, []);
 
   return (
-    <div className="w-full h-auto flex flex-col items-center">
+    <div className="w-full h-[100vh] flex flex-col items-center">
       {/* Sepolia redirect button */}
       <div className="flex justify-center">
         <a

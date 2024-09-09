@@ -71,7 +71,8 @@ export default async function getTokenHolders(): Promise<Wallet[]> {
     }
     return wallets;
   } catch (error) {
+    console.error("Error in getTokenHolders:");
+
     return [] as Wallet[];
-    console.error(error);
   }
 }
