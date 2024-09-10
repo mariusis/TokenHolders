@@ -19,11 +19,20 @@ export default async function getTokenHolders(): Promise<Wallet[]> {
     const provider = new WebSocketProvider(
       import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
     );
+
+
     const contract = new ethers.Contract(
       import.meta.env.VITE_CONTRACT_ADDRESS,
       ABI,
       provider
     );
+    
+    if(
+      !import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER || !import.meta.env.VITE_CONTRACT_ADDRESS){
+        throw new Error('There is a problem with the provider / contract address configuration');
+      }
+
+    
 
     // Define the start block number from which to query the Transfer events
     const startBlock = 6592486;
@@ -31,9 +40,6 @@ export default async function getTokenHolders(): Promise<Wallet[]> {
     // Get the current block number
     const endBlock = await provider.getBlockNumber();
 
-    console.log(
-      "Get Token Holders called on " + startBlock + " and " + endBlock
-    );
 
     // Query the Transfer event from the contract
     const events = await contract.queryFilter("Transfer", startBlock, endBlock);

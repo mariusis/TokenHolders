@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 
 import fetchData from "../hooks/InitializeTransferData";
 import Wallet from "../models/Wallet";
@@ -57,9 +57,9 @@ const TokenInfoDisplay = () => {
   }, []);
 
   return (
-    <div className="w-full h-[100vh] flex flex-col items-center">
+    <div className="flex flex-col h-[calc(100vh-4.5rem)] items-center justify-center relative">
       {/* Sepolia redirect button */}
-      <div className="flex justify-center">
+      <div className="absolute top-4 justify-center">
         <a
           href={`https://sepolia.etherscan.io/address/0xb1EA3b0211bee07388937Ae6Bdf2537c62DD6B92`}
           target="_blank"
@@ -81,14 +81,14 @@ const TokenInfoDisplay = () => {
             opacity: 0.6,
           }}
         ></div>
-        <div className="h-fit w-full absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center">
-          <p className=" text-2xl  font-bold text-blue-950">
+        <div className="h-fit w-full absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center ">
+          <p className=" text-2xl  font-bold text-blue-950 dark:text-white ">
             There are currently
           </p>
-          <p className=" text-4xl font-bold text-blue-950">
+          <p className=" text-4xl font-bold text-blue-950 dark:text-white">
             {tokenHolders > 0 ? tokenHolders : <span>&nbsp;</span>}
           </p>
-          <p className=" text-2xl font-bold text-blue-950">
+          <p className=" text-2xl font-bold text-blue-950 dark:text-white">
             wallets owning this token
           </p>
         </div>

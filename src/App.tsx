@@ -1,5 +1,5 @@
 import "./App.css";
-
+import { DarkThemeToggle, Flowbite } from "flowbite-react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -47,7 +47,10 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen flex-grow">
+    <Flowbite>
+      
+      <div className="flex flex-col min-h-screen flex-grow dark:bg-gray-900">
+      
       <Router>
         <Navbar />
         <Routes>
@@ -79,6 +82,7 @@ function App() {
         <Footer />
       </Router>
     </div>
+    </Flowbite>
   );
 }
 

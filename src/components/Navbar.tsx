@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 
 import { useEffect, useState } from "react";
 import { useWindowSize } from "react-use";
+import { DarkThemeToggle } from "flowbite-react";
 
 const Navbar = () => {
   const { width } = useWindowSize();
@@ -19,8 +20,8 @@ const Navbar = () => {
   }, [width]);
 
   return (
-    <nav className="sticky top-0 z-10 border-gray-200 dark:bg-gray-900">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 bg-gray-50 relative">
+    <nav className="sticky top-0 z-10 border-gray-200">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4  relative ">
         <a
           href="/TokenHolders/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -34,6 +35,7 @@ const Navbar = () => {
             Marius Token
           </span>
         </a>
+        <DarkThemeToggle />
         <button
           type="button"
           className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -89,9 +91,11 @@ const Navbar = () => {
               >
                 Balance Check
               </NavLink>
+              
             </li>
           </ul>
         </div>
+        
       </div>
     </nav>
   );

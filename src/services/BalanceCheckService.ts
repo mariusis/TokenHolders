@@ -22,10 +22,15 @@ export default async function checkUserBalance(address: string) {
       provider
     );
 
+    if(
+      !import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER || !import.meta.env.VITE_CONTRACT_ADDRESS){
+        throw new Error('There is a problem with the provider / contract address configuration');
+      }
+
     const balance = await contract.balanceOf(address); //Call to the balanceOf() method of the contract to get the balance of the address
 
     return balance;
-  } catch (e) {
-    console.log(e);
+  } catch (erorr) {
+    throw erorr;
   }
 }

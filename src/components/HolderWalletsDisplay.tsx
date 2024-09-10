@@ -54,7 +54,7 @@ const HolderWalletsDisplay = () => {
     return () => clearInterval(intervalId);
   }, []);
   return (
-    <div className="flex h-[100vh] items-center">
+    <div className="flex h-[calc(100vh-4.5rem)] items-center">
       <Card className="bg-white w-fit mx-auto rounded-lg shadow-md">
         <Table hoverable className="w-full">
           <Table.Head>

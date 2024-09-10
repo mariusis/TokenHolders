@@ -21,6 +21,12 @@ export default async function startTransferEventListener() {
       provider
     );
 
+    if(
+      !import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER || !import.meta.env.VITE_CONTRACT_ADDRESS){
+        throw new Error('There is a problem with the provider / contract address configuration');
+      }
+
+    
     // Set up an event listener for the Transfer event
     contract.on("Transfer", async (from, to) => {
       // Get the current balances of the sender and recipient
