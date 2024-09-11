@@ -25,7 +25,7 @@ const BalanceCheckForm = () => {
       });
     } catch (error) {
       // Log any errors to the console.
-      console.log(error);
+      throw error;
     }
   };
 

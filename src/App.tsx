@@ -48,40 +48,70 @@ function App() {
 
   return (
     <Flowbite>
-      
       <div className="flex flex-col min-h-screen flex-grow dark:bg-gray-900">
-      
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route
-            path="/TokenHolders"
-            element={
-              <ErrorBoundary FallbackComponent={ErrorMessage}>
-                <TokenInfoDisplay />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/TokenHolders/balanceCheck"
-            element={
-              <ErrorBoundary FallbackComponent={ErrorMessage}>
-                <BalanceCheckForm />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/TokenHolders/holderWallets"
-            element={
-              <ErrorBoundary FallbackComponent={ErrorMessage}>
-                <HolderWalletsDisplay />
-              </ErrorBoundary>
-            }
-          />
-        </Routes>
-        <Footer />
-      </Router>
-    </div>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route
+              path="/TokenHolders"
+              element={
+                <ErrorBoundary
+                  fallbackRender={({ error, resetErrorBoundary }) => (
+                    <div>
+                      <ErrorMessage
+                        error={error}
+                        resetErrorBoundary={resetErrorBoundary}
+                      />
+                      {/* Render the component that has an error */}
+                    </div>
+                  )}
+                >
+                  <TokenInfoDisplay />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/TokenHolders/balanceCheck"
+              element={
+                <ErrorBoundary
+                  fallbackRender={({ error, resetErrorBoundary }) => (
+                    <div>
+                      <ErrorMessage
+                        error={error}
+                        resetErrorBoundary={resetErrorBoundary}
+                      />
+                      <BalanceCheckForm /> // Render TokenInfoDisplay even if an
+                      error occurs
+                    </div>
+                  )}
+                >
+                  <BalanceCheckForm />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/TokenHolders/holderWallets"
+              element={
+                <ErrorBoundary
+                  fallbackRender={({ error, resetErrorBoundary }) => (
+                    <div>
+                      <ErrorMessage
+                        error={error}
+                        resetErrorBoundary={resetErrorBoundary}
+                      />
+                      <HolderWalletsDisplay /> // Render TokenInfoDisplay even
+                      if an error occurs
+                    </div>
+                  )}
+                >
+                  <HolderWalletsDisplay />
+                </ErrorBoundary>
+              }
+            />
+          </Routes>
+          <Footer />
+        </Router>
+      </div>
     </Flowbite>
   );
 }

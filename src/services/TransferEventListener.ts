@@ -5,41 +5,31 @@ import { WebSocketProvider } from "ethers";
 
 let contract: ethers.Contract;
 
+const provider = new WebSocketProvider(
+  import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
+);
+contract = new ethers.Contract(
+  import.meta.env.VITE_CONTRACT_ADDRESS,
+  ABI,
+  provider
+);
 /**
  * Start listening to the Transfer event on the contract and update the
  * token balances in the database when a transfer occurs.
  */
 export default async function startTransferEventListener() {
   // Create a WebSocket provider and a contract instance
-  try {
-    const provider = new WebSocketProvider(
-      import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-    );
-    contract = new ethers.Contract(
-      import.meta.env.VITE_CONTRACT_ADDRESS,
-      ABI,
-      provider
-    );
 
-    if(
-      !import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER || !import.meta.env.VITE_CONTRACT_ADDRESS){
-        throw new Error('There is a problem with the provider / contract address configuration');
-      }
+  // Set up an event listener for the Transfer event
+  contract.on("Transfer", async (from, to) => {
+    // Get the current balances of the sender and recipient
+    const fromBalance = await contract.balanceOf(from);
+    const toBalance = await contract.balanceOf(to);
 
-    
-    // Set up an event listener for the Transfer event
-    contract.on("Transfer", async (from, to) => {
-      // Get the current balances of the sender and recipient
-      const fromBalance = await contract.balanceOf(from);
-      const toBalance = await contract.balanceOf(to);
-
-      // Update the balances in the database
-      await updateTokenHolder(from, formatUnits(fromBalance, 18));
-      await updateTokenHolder(to, formatUnits(toBalance, 18));
-    });
-  } catch (error) {
-    throw error;
-  }
+    // Update the balances in the database
+    await updateTokenHolder(from, formatUnits(fromBalance, 18));
+    await updateTokenHolder(to, formatUnits(toBalance, 18));
+  });
 }
 
 /**

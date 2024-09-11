@@ -17,20 +17,15 @@ const TokenInfoDisplay = () => {
 
   useEffect(() => {
     // Initialize the data
-    fetchData().catch((error) => {
-      showBoundary(error);
-    });
-
-    const intervalId = setInterval(fetchData, 10000); // Set the interval to update the data every 10 second
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
+    fetchData().catch((error) => showBoundary(error));
   }, []);
 
   useEffect(() => {
     // Initialize the transfer event listener when the component mounts
     TransferEventListener().catch((error) => {
       showBoundary(error);
+
+      // Stop the transfer event listener when the component unmounts
     });
     return () => {
       stopTransferEventListener();
@@ -39,21 +34,12 @@ const TokenInfoDisplay = () => {
 
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
-      try {
-        const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
+      const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
 
-        setTokenHolders(data.length);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      setTokenHolders(data.length);
     };
 
     fetchDataAndUpdate();
-
-    const intervalId = setInterval(fetchDataAndUpdate, 1000); // Set the interval to update the data every 1 second
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
   }, []);
 
   return (
