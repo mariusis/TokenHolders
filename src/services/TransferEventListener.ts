@@ -1,15 +1,14 @@
 import { ethers, formatUnits } from "ethers";
 import ABI from "../abis/tokenABI.json";
 import db from "../lib/dexie.config";
-import { WebSocketProvider } from "ethers";
+
 import EventEmitter from "../utils/EventEmitter";
+import WebSocketSingleton from "../utils/WebSocketSingleton";
 
 export const eventEmmiter = new EventEmitter();
 
 export default async function startTransferEventListener() {
-  const provider = new WebSocketProvider(
-    import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-  );
+  const provider = WebSocketSingleton.getInstance();
   const contract = new ethers.Contract(
     import.meta.env.VITE_CONTRACT_ADDRESS,
     ABI,

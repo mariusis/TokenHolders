@@ -1,7 +1,8 @@
 import ABI from "../abis/tokenABI.json";
 
 import { ethers } from "ethers";
-import { WebSocketProvider } from "ethers/providers";
+
+import WebSocketSingleton from "../utils/WebSocketSingleton";
 
 /**
  * Calls the balanceOf() method of the contract to get the balance of the address.
@@ -11,9 +12,7 @@ import { WebSocketProvider } from "ethers/providers";
 
 export default async function checkUserBalance(address: string) {
   //Intitialize the contract
-  const provider = new WebSocketProvider(
-    import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-  );
+  const provider = WebSocketSingleton.getInstance();
   const contract = new ethers.Contract(
     import.meta.env.VITE_CONTRACT_ADDRESS,
     ABI,

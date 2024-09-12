@@ -1,8 +1,9 @@
 import ABI from "../abis/tokenABI.json";
 
 import { ethers, formatUnits } from "ethers";
-import { WebSocketProvider } from "ethers/providers";
+
 import Wallet from "../models/Wallet";
+import WebSocketSingleton from "../utils/WebSocketSingleton";
 
 /**
  * Retrieves the list of token holders and their balances by querying the
@@ -13,9 +14,7 @@ import Wallet from "../models/Wallet";
  * and balance of each token holder.
  */
 export default async function getTokenHolders(): Promise<Wallet[]> {
-  const provider = new WebSocketProvider(
-    import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-  );
+  const provider = WebSocketSingleton.getInstance();
   const contract = new ethers.Contract(
     import.meta.env.VITE_CONTRACT_ADDRESS,
     ABI,
