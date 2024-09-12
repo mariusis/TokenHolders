@@ -3,15 +3,6 @@ import ABI from "../abis/tokenABI.json";
 import { ethers } from "ethers";
 import { WebSocketProvider } from "ethers/providers";
 
-const provider = new WebSocketProvider(
-  import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-);
-const contract = new ethers.Contract(
-  import.meta.env.VITE_CONTRACT_ADDRESS,
-  ABI,
-  provider
-);
-
 /**
  * Calls the balanceOf() method of the contract to get the balance of the address.
  * @param {string} address - The wallet address to check the balance of.
@@ -20,6 +11,20 @@ const contract = new ethers.Contract(
 
 export default async function checkUserBalance(address: string) {
   //Intitialize the contract
+  const provider = new WebSocketProvider(
+    import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
+  );
+  const contract = new ethers.Contract(
+    import.meta.env.VITE_CONTRACT_ADDRESS,
+    ABI,
+    provider
+  );
+  if (
+    !import.meta.env.VITE_CONTRACT_ADDRESS ||
+    !import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
+  ) {
+    throw new Error("Contract address or RPC provider not set");
+  }
 
   const balance = await contract.balanceOf(address); //Call to the balanceOf() method of the contract to get the balance of the address
 

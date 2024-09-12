@@ -8,10 +8,22 @@ import HolderWalletsDisplay from "./components/HolderWalletsDisplay";
 import Footer from "./components/Footer";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorMessage from "./components/ErrorMessage";
-import TokenInfoDisplay from "./components/TokenInfoDisplay";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
+import Home from "./components/Home";
+
+interface GlobalError {
+  message: string | Event;
+  source?: string;
+  lineno?: number;
+  colno?: number;
+  error?: Error;
+}
 
 function App() {
+  const [globalError, setGlobalError] = useState<GlobalError | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     // Global error handler for synchronous errors
     window.onerror = function (message, source, lineno, colno, error) {
@@ -22,21 +34,27 @@ function App() {
         colno,
         error,
       });
-
-      // You can send the error details to a logging service if needed
-      // sendErrorToServer({ message, source, lineno, colno, error });
-
-      return true; // Prevents the default browser error handling
+      setGlobalError({
+        message,
+        source,
+        lineno,
+        colno,
+        error,
+      });
+      setShowModal(true);
     };
 
     // Global handler for unhandled promise rejections
     window.addEventListener("unhandledrejection", function (event) {
-      console.error("Unhandled Promise Rejection:", event.reason);
-
-      // Optionally, send the error details to a logging service
-      // sendErrorToServer(event.reason);
-
-      event.preventDefault(); // Prevent the default browser behavior
+      console.error("Unhandled Promise Rejection(Global):", event.reason);
+      setGlobalError({
+        message: event.reason.message,
+        source: "",
+        lineno: 0,
+        colno: 0,
+        error: event.reason,
+      });
+      setShowModal(true);
     });
 
     // Cleanup listeners on unmount
@@ -46,30 +64,17 @@ function App() {
     };
   }, []);
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <Flowbite>
       <div className="flex flex-col min-h-screen flex-grow dark:bg-gray-900">
         <Router>
           <Navbar />
           <Routes>
-            <Route
-              path="/TokenHolders"
-              element={
-                <ErrorBoundary
-                  fallbackRender={({ error, resetErrorBoundary }) => (
-                    <div>
-                      <ErrorMessage
-                        error={error}
-                        resetErrorBoundary={resetErrorBoundary}
-                      />
-                      {/* Render the component that has an error */}
-                    </div>
-                  )}
-                >
-                  <TokenInfoDisplay />
-                </ErrorBoundary>
-              }
-            />
+            <Route path="/TokenHolders" element={<Home />} />
             <Route
               path="/TokenHolders/balanceCheck"
               element={
@@ -80,8 +85,6 @@ function App() {
                         error={error}
                         resetErrorBoundary={resetErrorBoundary}
                       />
-                      <BalanceCheckForm /> // Render TokenInfoDisplay even if an
-                      error occurs
                     </div>
                   )}
                 >
@@ -99,8 +102,6 @@ function App() {
                         error={error}
                         resetErrorBoundary={resetErrorBoundary}
                       />
-                      <HolderWalletsDisplay /> // Render TokenInfoDisplay even
-                      if an error occurs
                     </div>
                   )}
                 >
@@ -111,6 +112,12 @@ function App() {
           </Routes>
           <Footer />
         </Router>
+        {showModal && globalError && (
+          <ErrorMessage
+            error={globalError.error}
+            resetErrorBoundary={handleCloseModal}
+          />
+        )}
       </div>
     </Flowbite>
   );

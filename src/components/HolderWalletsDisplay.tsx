@@ -3,59 +3,56 @@ import Wallet from "../models/Wallet";
 
 import fetchData from "../hooks/InitializeTransferData";
 import db from "../lib/dexie.config";
-import TransferEventListener, {
-  stopTransferEventListener,
-} from "../services/TransferEventListener";
 
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { Button, Card, Table, Tooltip } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import startTransferEventListener, {
+  eventEmmiter,
+} from "../services/TransferEventListener";
 
 const HolderWalletsDisplay = () => {
   const [wallets, setWallets] = useState([] as Wallet[]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Number of items per page
 
   library.add(faCopy);
 
-  useEffect(() => {
-    // Initialize the data
-    fetchData();
-
-    const intervalId = setInterval(fetchData, 10000); // Set the interval to update the data every 1 second
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []);
+  const updateState = async () => {
+    const data = await db.table("tokenHolders").toArray();
+    setWallets(data);
+  };
 
   useEffect(() => {
-    // Initialize the transfer event listener when the component mounts
-    TransferEventListener();
-    return () => {
-      stopTransferEventListener();
-    };
-  }, []);
-
-  useEffect(() => {
-    const fetchDataAndUpdate = async () => {
-      try {
-        const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
-
-        setWallets(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+    const initialize = async () => {
+      await fetchData();
+      startTransferEventListener();
     };
 
-    fetchDataAndUpdate();
-
-    const intervalId = setInterval(fetchDataAndUpdate, 1000); // Set the interval to update the data every 1 second
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
+    initialize();
   }, []);
+
+  useEffect(() => {
+    updateState();
+  }, []);
+
+  eventEmmiter.on("transfer", () => {
+    updateState();
+  });
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentWallets = wallets.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(wallets.length / itemsPerPage);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div className="flex h-[calc(100vh-4.5rem)] items-center">
-      <Card className="bg-white w-fit mx-auto rounded-lg shadow-md">
+      <Card className="bg-gray-50 w-fit mx-auto rounded-lg shadow-md">
         <Table hoverable className="w-full">
           <Table.Head>
             <Table.HeadCell className="text-gray-500 text-center">
@@ -66,7 +63,7 @@ const HolderWalletsDisplay = () => {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body>
-            {wallets.map((wallet, index) => (
+            {currentWallets.map((wallet, index) => (
               <Table.Row key={index} className="hover:bg-gray-100">
                 <Table.Cell>
                   <div className="flex items-center gap-2">
@@ -98,6 +95,21 @@ const HolderWalletsDisplay = () => {
             ))}
           </Table.Body>
         </Table>
+
+        {/* Pagination controls */}
+        <div className="flex justify-center mt-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Button
+              key={index}
+              onClick={() => paginate(index + 1)}
+              color={currentPage === index + 1 ? "blue" : "gray"}
+              size="xs"
+              className="mx-1"
+            >
+              {index + 1}
+            </Button>
+          ))}
+        </div>
       </Card>
     </div>
   );

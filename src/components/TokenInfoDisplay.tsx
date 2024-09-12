@@ -1,47 +1,11 @@
-import { useEffect, useState } from "react";
-
 import logo from "../assets/logo.png";
 
-import fetchData from "../hooks/InitializeTransferData";
-import Wallet from "../models/Wallet";
-import TransferEventListener, {
-  stopTransferEventListener,
-} from "../services/TransferEventListener";
-import db from "../lib/dexie.config";
 import { Button } from "flowbite-react";
-import { useErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorMessage from "./ErrorMessage";
+import HeroText from "./HeroText";
 
 const TokenInfoDisplay = () => {
-  const [tokenHolders, setTokenHolders] = useState(0);
-  const { showBoundary } = useErrorBoundary();
-
-  useEffect(() => {
-    // Initialize the data
-    fetchData().catch((error) => showBoundary(error));
-  }, []);
-
-  useEffect(() => {
-    // Initialize the transfer event listener when the component mounts
-    TransferEventListener().catch((error) => {
-      showBoundary(error);
-
-      // Stop the transfer event listener when the component unmounts
-    });
-    return () => {
-      stopTransferEventListener();
-    };
-  }, []);
-
-  useEffect(() => {
-    const fetchDataAndUpdate = async () => {
-      const data: Wallet[] = await db.table("tokenHolders").toArray(); //Get the cached data from dexie
-
-      setTokenHolders(data.length);
-    };
-
-    fetchDataAndUpdate();
-  }, []);
-
   return (
     <div className="flex flex-col h-[calc(100vh-4.5rem)] items-center justify-center relative">
       {/* Sepolia redirect button */}
@@ -67,17 +31,9 @@ const TokenInfoDisplay = () => {
             opacity: 0.6,
           }}
         ></div>
-        <div className="h-fit w-full absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center ">
-          <p className=" text-2xl  font-bold text-blue-950 dark:text-white ">
-            There are currently
-          </p>
-          <p className=" text-4xl font-bold text-blue-950 dark:text-white">
-            {tokenHolders > 0 ? tokenHolders : <span>&nbsp;</span>}
-          </p>
-          <p className=" text-2xl font-bold text-blue-950 dark:text-white">
-            wallets owning this token
-          </p>
-        </div>
+        <ErrorBoundary FallbackComponent={ErrorMessage}>
+          <HeroText></HeroText>
+        </ErrorBoundary>
       </div>
     </div>
   );

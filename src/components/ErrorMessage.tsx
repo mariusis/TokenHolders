@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal } from "flowbite-react";
 
 interface ErrorComponentProps {
-  error: Error;
+  error?: Error;
   resetErrorBoundary: () => void;
 }
 
@@ -32,7 +32,7 @@ const ErrorMessage: React.FC<ErrorComponentProps> = ({
             The problem you are encountering seems to be related to:
           </p>
           <p className="text-xl leading-relaxed text-gray-500 dark:text-gray-400">
-            {error.message}
+            {error?.message}
           </p>
         </div>
       </Modal.Body>
