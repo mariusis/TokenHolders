@@ -17,8 +17,6 @@ const Home = () => {
       >
         <TokenInfoDisplay />
       </ErrorBoundary>
-
-      <p>The rest of the home component</p>
     </div>
   );
 };
