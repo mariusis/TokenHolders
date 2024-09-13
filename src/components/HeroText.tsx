@@ -6,14 +6,29 @@ import startTransferEventListener, {
 import db from "../lib/dexie.config"; // Ensure the correct path
 import fetchData from "../hooks/InitializeTransferData";
 
+/**
+ * HeroText component
+ *
+ * Displays the number of wallets owning a particular token
+ *
+ * @returns {React.ReactElement} - A JSX element
+ */
 const HeroText: React.FC = () => {
   const [tokenHolders, setTokenHolders] = useState<number>(0);
 
+  /**
+   * Updates the state of the component by fetching the number of token holders
+   * from the database
+   */
   const updateState = async () => {
     const data = await db.table("tokenHolders").toArray();
     setTokenHolders(data.length);
   };
 
+  /**
+   * Initializes the component by fetching the data and starting the
+   * TransferEventListener
+   */
   useEffect(() => {
     const initialize = async () => {
       await fetchData();
@@ -25,6 +40,9 @@ const HeroText: React.FC = () => {
     initialize();
   }, []);
 
+  /**
+   * Listens for the "transfer" event and updates the state if it is triggered
+   */
   eventEmmiter.on("transfer", () => {
     updateState();
   });

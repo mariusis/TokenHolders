@@ -12,7 +12,7 @@ const ErrorMessage: React.FC<ErrorComponentProps> = ({
   resetErrorBoundary,
 }) => {
   const [openModal, setOpenModal] = useState(true);
-  const [modalSize, setModalSize] = useState<string>("xl");
+  const modalSize = "xl";
 
   useEffect(() => {
     if (!openModal) {

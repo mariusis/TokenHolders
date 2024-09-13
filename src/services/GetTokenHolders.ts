@@ -1,10 +1,7 @@
-import ABI from "../abis/tokenABI.json";
-
-import { ethers, formatUnits } from "ethers";
-
 import Wallet from "../models/Wallet";
 import WebSocketSingleton from "../utils/WebSocketSingleton";
 import ContractSingleton from "../utils/ContractSingleton";
+import { formatUnits } from "ethers";
 
 /**
  * Retrieves the list of token holders and their balances by querying the
@@ -34,7 +31,7 @@ export default async function getTokenHolders(): Promise<Wallet[]> {
 
   const additionalEvents = await contract.queryFilter(
     "Transfer",
-    endBlock - 50000,
+    endBlock - 50000 + 1,
     endBlock
   );
 

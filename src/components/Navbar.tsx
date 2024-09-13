@@ -5,14 +5,29 @@ import { useEffect, useState } from "react";
 import { useWindowSize } from "react-use";
 import { DarkThemeToggle } from "flowbite-react";
 
+/**
+ * A responsive navigation bar with a hamburger menu that toggles the main menu on mobile devices.
+ *
+ * @returns {JSX.Element} The navigation bar component.
+ */
 const Navbar = () => {
   const { width } = useWindowSize();
   const [isOpen, setIsOpen] = useState(false);
 
+  /**
+   * Toggle the main menu's visibility.
+   *
+   * @returns {void} No return value.
+   */
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
 
+  /**
+   * Set the main menu's visibility to false when the window's width is larger than 768px.
+   *
+   * @returns {void} No return value.
+   */
   useEffect(() => {
     if (width > 768) {
       setIsOpen(false);
