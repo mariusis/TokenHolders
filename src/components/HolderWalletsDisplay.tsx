@@ -44,17 +44,11 @@ const HolderWalletsDisplay = () => {
     const initialize = async () => {
       await fetchData();
       startTransferEventListener();
+
+      updateState();
     };
 
     initialize();
-  }, []);
-
-  /**
-   * A hook to update the state of the component whenever the data in the
-   * Dexie database changes.
-   */
-  useEffect(() => {
-    updateState();
   }, []);
 
   /**
@@ -112,7 +106,6 @@ const HolderWalletsDisplay = () => {
                         size="xs"
                         color="gray"
                         onClick={() => {
-                          alert("Wallet address copied to clipboard");
                           navigator.clipboard.writeText(wallet.address);
                         }}
                       >
