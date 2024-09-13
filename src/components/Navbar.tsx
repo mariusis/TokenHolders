@@ -35,7 +35,7 @@ const Navbar = () => {
   }, [width]);
 
   return (
-    <nav className="sticky top-0 z-10 border-gray-200">
+    <nav className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-gray-200">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 relative ">
         <a
           href="/TokenHolders/"
@@ -77,7 +77,7 @@ const Navbar = () => {
           </button>
 
           <div
-            className={`transition-all duration-500 ease-in-out overflow-hidden absolute left-0 right-0 bg-gray-50 dark:bg-gray-800 ${
+            className={`transition-all duration-500 ease-in-out overflow-hidden absolute left-0 right-0 bg-white dark:bg-gray-800 ${
               isOpen
                 ? "top-full opacity-100 max-h-64"
                 : "top-0 opacity-0 max-h-0"
@@ -85,7 +85,7 @@ const Navbar = () => {
             id="navbar-default"
             style={{ zIndex: 100 }}
           >
-            <ul className="font-medium flex flex-col p-4 md:p-0 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            <ul className="font-medium flex flex-col p-4 md:p-0 border border-gray-100 rounded-lg bg-white md:flex-row md:space-x-8 rtl:space-x-reverse md:border-0 dark:bg-gray-800  dark:border-gray-700">
               <li>
                 <NavLink
                   to="/TokenHolders/"
