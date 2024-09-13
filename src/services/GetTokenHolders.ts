@@ -4,6 +4,7 @@ import { ethers, formatUnits } from "ethers";
 
 import Wallet from "../models/Wallet";
 import WebSocketSingleton from "../utils/WebSocketSingleton";
+import ContractSingleton from "../utils/ContractSingleton";
 
 /**
  * Retrieves the list of token holders and their balances by querying the
@@ -15,17 +16,7 @@ import WebSocketSingleton from "../utils/WebSocketSingleton";
  */
 export default async function getTokenHolders(): Promise<Wallet[]> {
   const provider = WebSocketSingleton.getInstance();
-  const contract = new ethers.Contract(
-    import.meta.env.VITE_CONTRACT_ADDRESS,
-    ABI,
-    provider
-  );
-  if (
-    !import.meta.env.VITE_CONTRACT_ADDRESS ||
-    !import.meta.env.VITE_WEBSOCKET_RPC_PROVIDER
-  ) {
-    throw new Error("Contract address or RPC provider not set");
-  }
+  const contract = ContractSingleton.getInstance();
   // Create a provider and a contract instance
 
   // Define the start block number from which to query the Transfer events
