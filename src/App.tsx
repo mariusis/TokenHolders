@@ -1,5 +1,5 @@
 import "./App.css";
-import { DarkThemeToggle, Flowbite } from "flowbite-react";
+import { Flowbite } from "flowbite-react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -56,7 +56,17 @@ function App() {
       });
       setShowModal(true);
     });
-
+    window.addEventListener("error", function (error) {
+      console.error("Unhandled Promise Rejection(Global):", error);
+      setGlobalError({
+        message: error.message,
+        source: "",
+        lineno: 0,
+        colno: 0,
+        error: error.error,
+      });
+      setShowModal(true);
+    });
     // Cleanup listeners on unmount
     return () => {
       window.onerror = null;
