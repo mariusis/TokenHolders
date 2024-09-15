@@ -11,6 +11,7 @@ import ErrorMessage from "./components/ErrorMessage";
 
 import { useEffect, useState } from "react";
 import Home from "./components/Home";
+import GetTokens from "./components/GetTokens";
 
 interface GlobalError {
   message: string | Event;
@@ -116,6 +117,23 @@ function App() {
                   )}
                 >
                   <HolderWalletsDisplay />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/TokenHolders/getTokens"
+              element={
+                <ErrorBoundary
+                  fallbackRender={({ error, resetErrorBoundary }) => (
+                    <div>
+                      <ErrorMessage
+                        error={error}
+                        resetErrorBoundary={resetErrorBoundary}
+                      />
+                    </div>
+                  )}
+                >
+                  <GetTokens />
                 </ErrorBoundary>
               }
             />
