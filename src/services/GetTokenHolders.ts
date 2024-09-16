@@ -26,12 +26,17 @@ export default async function getTokenHolders(): Promise<Wallet[]> {
   const events = await contract.queryFilter(
     "Transfer",
     startBlock,
-    endBlock - 50000
+    startBlock + 49999
   );
 
   const additionalEvents = await contract.queryFilter(
     "Transfer",
-    endBlock - 50000 + 1,
+    startBlock + 50000,
+    startBlock + 99999
+  );
+  const additionalEvents2 = await contract.queryFilter(
+    "Transfer",
+    startBlock + 100000,
     endBlock
   );
 
@@ -50,6 +55,16 @@ export default async function getTokenHolders(): Promise<Wallet[]> {
     }
   }
   for (const event of additionalEvents) {
+    if ("args" in event) {
+      // Get the sender and recipient of the transfer event
+      const [sender, recipient] = event.args;
+
+      // Update the balances of the sender and recipient
+      holders.add(sender);
+      holders.add(recipient);
+    }
+  }
+  for (const event of additionalEvents2) {
     if ("args" in event) {
       // Get the sender and recipient of the transfer event
       const [sender, recipient] = event.args;
