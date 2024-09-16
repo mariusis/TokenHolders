@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import startTransferEventListener, {
   eventEmmiter,
 } from "../services/TransferEventListener";
+import { faSortUp, faSortDown } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * A component that displays a table of token holders and their balances.
@@ -22,10 +23,25 @@ const HolderWalletsDisplay = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Number of items per page
 
+  const [sorted, setSorted] = useState(1);
+  const tokenSupply = 100000;
+
+  function sortBalances(): void {
+    if (sorted == 0) {
+      wallets.sort((a, b) => b.balance - a.balance);
+      setSorted(1);
+    } else {
+      wallets.sort((a, b) => a.balance - b.balance);
+      setSorted(0);
+    }
+  }
+
   /**
    * A hook to add the "faCopy" icon to the Font Awesome library.
    */
   library.add(faCopy);
+  library.add(faSortUp);
+  library.add(faSortDown);
 
   /**
    * A function to update the state of the component with the latest data
@@ -33,6 +49,7 @@ const HolderWalletsDisplay = () => {
    */
   const updateState = async () => {
     const data = await db.table("tokenHolders").toArray();
+    data.sort((a, b) => b.balance - a.balance);
     setWallets(data);
   };
 
@@ -77,27 +94,33 @@ const HolderWalletsDisplay = () => {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] items-center ">
-      <Card className="bg-gray-50 w-fit mx-auto my-10 rounded-lg shadow-md border-2 ">
-        <Table hoverable className="w-full ">
-          <Table.Head>
+    <div className="flex min-h-[calc(100vh-5rem)] items-center px-4">
+      <Card className="bg-gray-50 w-full max-w-[95%] sm:max-w-[80%] lg:max-w-[60%] mx-auto my-10 rounded-lg shadow-md border-2">
+        <Table hoverable className="w-full">
+          <Table.Head className="" p-2>
             <Table.HeadCell className="text-gray-500 text-center">
               Address
             </Table.HeadCell>
-            <Table.HeadCell className="text-gray-500 text-center">
-              Balance
+            <Table.HeadCell className="text-gray-500 text-left w-[30%] p-2 ">
+              <button className="w-fit" onClick={sortBalances}>
+                Balance{" "}
+                <FontAwesomeIcon
+                  className="relative ml-2"
+                  icon={sorted === 1 ? faSortUp : faSortDown}
+                />
+              </button>
             </Table.HeadCell>
           </Table.Head>
           <Table.Body>
             {currentWallets.map((wallet, index) => (
               <Table.Row key={index} className="hover:bg-gray-100 relative">
-                <Table.Cell>
-                  <div className="flex items-center justify-between gap-2 ">
+                <Table.Cell className="whitespace-nowrap overflow-hidden text-ellipsis max-w-[100px] sm:max-w-[150px] p-2">
+                  <div className="flex items-center justify-between gap-2">
                     <a
                       href={`https://sepolia.etherscan.io/address/${wallet.address}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:text-blue-700 overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px] sm:max-w-none"
+                      className="text-blue-500 hover:text-blue-700 overflow-hidden text-ellipsis"
                     >
                       {wallet.address}
                     </a>
@@ -114,8 +137,11 @@ const HolderWalletsDisplay = () => {
                     </Tooltip>
                   </div>
                 </Table.Cell>
-                <Table.Cell className="text-center">
-                  {wallet.balance}
+                <Table.Cell className="text-center max-w-[50px] sm:max-w-[75px] overflow-hidden text-ellipsis ">
+                  <p className=" text-center">{wallet.balance}</p>
+                  <p className=" text-center">
+                    ({((wallet.balance / tokenSupply) * 100).toFixed(2)} %)
+                  </p>
                 </Table.Cell>
               </Table.Row>
             ))}
